@@ -1,0 +1,26 @@
+Roles:
+- Manager
+- Driver
+- Customer
+
+
+<<<<< Database >>>>>
+
+Login:
+- id *
+- username
+- pwd
+- role/acctype
+
+Orders:
+- id *
+- status
+- timestamp
+- orderDetails
+- cost
+
+
+<<<<< Ajax >>>>>
+
+
+

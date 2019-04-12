@@ -1,4 +1,9 @@
-Roles:
+Index Page:
+- Username field
+- pwd field
+
+
+Dash board page for each Roles:
 - Manager
 - Driver
 - Customer
@@ -6,11 +11,13 @@ Roles:
 
 <<<<< Database >>>>>
 
-Login:
+Login: (Also used for Register)
 - id *
 - username
 - pwd
 - role/acctype
+
+
 
 Orders:
 - id *

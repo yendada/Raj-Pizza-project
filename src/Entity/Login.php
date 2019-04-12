@@ -39,6 +39,11 @@ class Login
      */
     private $acctype;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pwd;
+
     
     
    public function getStatus(): ?string
@@ -97,6 +102,18 @@ class Login
     public function setAcctype(string $acctype): self
     {
         $this->acctype = $acctype;
+
+        return $this;
+    }
+
+    public function getPwd(): ?string
+    {
+        return $this->pwd;
+    }
+
+    public function setPwd(?string $pwd): self
+    {
+        $this->pwd = $pwd;
 
         return $this;
     }

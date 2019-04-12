@@ -142,13 +142,81 @@
 
 <script>
 
-$( "#registerButton" ).click(function() {
-  alert( "Register button clicked" );
-});
 
 $( "#loginButton" ).click(function() {
-  alert( "Login button clicked to Login" );
+  
+      var un = $( "#login_username" ).val();
+      console.log(un);
+      
+      var pw = $( "#login_pass" ).val();
+      console.log(pw);
+      
+
+      
+      
+      $.post( "/backend", { type: "login", username:un, password:pw})
+     .done(function( data ) {
+        alert( "Data Loaded: " + data );
+        
+        
+        if(data == 'customer'){
+            window.location="/index#customer";
+        }
+        else if(data == 'driver'){
+            window.location="/index#driver";
+        }        
+        
+       });
+  
+  
+  
+  //alert( "register button pressed!" );
+  
+  
 });
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$( "#registerButton" ).click(function() {
+  
+      var un = $( "#username" ).val();
+      console.log(un);
+      
+      var pw = $( "#pass" ).val();
+      console.log(pw);
+      
+      var at = $( "#acctype" ).val();
+      console.log(acctype);
+      
+      
+      
+      $.post( "/backend", { type: "register", username:un, password:pw, acctype:at})
+     .done(function( data ) {
+        alert( "Data Loaded: " + data );
+       });
+  
+  
+  
+  //alert( "register button pressed!" );
+  
+  
+});
+
 
 </script>
 

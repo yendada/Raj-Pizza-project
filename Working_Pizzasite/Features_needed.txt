@@ -13,18 +13,21 @@ Dash board page for each Roles:
 
 Login: (Also used for Register)
 - id *
-- username
-- pwd
-- role/acctype
+- username (string)
+- pwd(string)
+- acctype(string)
 
 
 
 Orders:
 - id *
-- status
-- timestamp
-- orderDetails
-- cost
+- date(DateTimeInterface)
+- placedby(string)
+- ordered(string)
+- orderPrice(int)
+- status(string)
+- address(atring)datstring
+
 
 
 <<<<< Ajax >>>>>

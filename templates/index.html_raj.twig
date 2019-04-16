@@ -142,34 +142,67 @@
 
 <script>
 
-		$( "#registerButton" ).click(function() {
+
+$( "#loginButton" ).click(function() {
+  
+      var un = $( "#login_username" ).val();
+      console.log(un);
+      
+      var pw = $( "#login_pass" ).val();
+      console.log(pw);
+      
+
+      
+      
+      $.post( "/backend", { type: "login", username:un, password:pw})
+     .done(function( data ) {
+        alert( "Data Loaded: " + data );
+        
+        
+        if(data == 'customer'){
+            window.location="/index#customer";
+        }
+        else if(data == 'driver'){
+            window.location="/index#driver";
+        }        
+        
+       });
+  
+  
+  
+  //alert( "register button pressed!" );
+  
+  
+});
 
 
-		  var un = $( "#username" ). val();
-		  console.log(un);
-		  
-		  
-		  var pw = $( "#pass" ). val();
-		  console.log(pw);
-		  
-		  
-		  var at = $( "#acctype" ). val();
-		  console.log(at);
-		  
-		  
-		  $.post( "/backend", { type: "register" , username:un, password:pw, acctype:at})
-			.done(function( data ) {
-			alert( "Data Loaded: " + data );
-			});
-		  
-		  
-		  
-		  //alert( "Register button clicked" );
-		  
-		});
 
 
 
+$( "#registerButton" ).click(function() {
+  
+      var un = $( "#username" ).val();
+      console.log(un);
+      
+      var pw = $( "#pass" ).val();
+      console.log(pw);
+      
+      var at = $( "#acctype" ).val();
+      console.log(at);
+      
+      
+      
+      $.post( "/backend", { type: "register", username:un, pass:pw, acctype:at})
+     .done(function( data ) {
+        alert( "Data Loaded: " + data );
+       });
+  
+  
+  
+  //alert( "register button pressed!" );
+  
+  
+});
 
 
 </script>

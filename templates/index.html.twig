@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 
@@ -7,6 +5,29 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Multi-page template</title>
+	<style type = text/CSS>
+	.ui-grid-solo {
+	padding-top:.200em;
+    font-size: 18px;
+    line-height: 80px;
+    font-weight: bold;
+	}
+	
+	.ui-grid-c[data-role=fieldcontain] {
+    font-size: 14px;
+    line-height: 60px;
+    font-weight: ;
+	}
+	.controlgroup-textinput{
+    padding-top:.22em;
+    padding-bottom:.22em;
+	}
+	</style>
+	
+	<style>
+    .ui-content { margin: 0.5em auto; max-width: 1000px; width: 90%; font: 18px/1.5 sans-serif; }
+    .ui-content { background: #f2f2f2; padding: 3px 5px; }
+</style>
 
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -29,16 +50,8 @@
 
 		<br>
         Welcome to the application, login or register.
-	
-	<br>
-	
-		<label for="text-1">Username:</label>
-		<input type="text" name="text-1" id="text-1" value="">
 
-		<label for="text-2">Password:</label>
-		<input type="text" name="text-2" id="text-2" value="">
-
-		<h3>Show internal pages:</h3>
+		<h3>Please choose one of the following actions:</h3>
 		<p><a href="#register" class="ui-btn ui-shadow ui-corner-all">Register</a></p>
 		<p><a href="#login" class="ui-btn ui-shadow ui-corner-all">Login</a></p>
 
@@ -98,27 +111,13 @@
 		<h2>Login</h2>
 	   Username <input type="text" name="login_username" id="login_username" value="">
        Password <input type="text" name="login_pass" id="login_pass" value="">
-        <button class="ui-btn" id="loginButton">Submit</button>
+        <button  id="loginButton" data-theme="b">Submit</button>
         
         
         
 	</div><!-- /content -->
 
 
-</div>
-
-
-<div data-role="page" id="driver" data-theme="a">
-
-       <div data-role="header">
-		<h1>Driver</h1>
-      </div><!-- /header -->
-
-      <div role="main" class="ui-content">
-	
-
-
-	</div><!-- /content -->
 </div>
 
 <div data-role="page" id="register" data-theme="a">
@@ -130,48 +129,692 @@
       <div role="main" class="ui-content">
 		<h2>Register</h2>
         
-       Username <input type="text" name="username" id="username" value="">
-       Password <input type="text" name="pass" id="pass" value="">
-        AccType <input type="text" name="acctype" id="acctype" value="">
-       <button class="ui-btn" id="registerButton">Submit</button>
-
+       Username <input type="text" name="register_username" id="register_username" value="">
+	   
+       Password <input type="text" name="register_pass" id="register_pass" value="">
+	   
+       <form>
+			<fieldset data-role="controlgroup" data-type="horizontal">
+				<legend>Account Type</legend>
+				<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="customer" checked="checked">
+				
+				<label for="radio-choice-h-2a">Customer</label>  <!-- selected by default -->
+				
+				<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="driver">
+				<label for="radio-choice-h-2b">Driver</label>
+				
+				<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2c" value="manager">
+				<label for="radio-choice-h-2c">Manager</label>
+				</fieldset>
+		</form>
+		
+		<br>
+		<button  id="registerButton" data-theme="b">Submit</button>
 
 	</div><!-- /content -->
 </div>
-</body>
+
+<div data-role="page" id="driver" data-theme="a">
+
+	<div data-role="header">
+	
+		<h1>Driver</h1>
+		
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+	
+		<div class="ui-grid-b" data-type="horizontal">
+			<div class="ui-block-a">Current weather:</div>
+		
+			<div class="ui-block-b"><button class='btn' id="weather" word-wrap="break-word">Show</button>
+			</div>
+			
+			<div class="ui-block-c"><button class='btn' id="hideForecast">Hide</button>
+			</div>
+			<script>
+			$("#hideForecast").hide();
+			</script>
+		
+			<div id="output">	</div><!-- /weather output -->
+			
+		</div><!-- /weather output -->
+		
+		<p><br><b> Current orders: </b></p>
+		
+		<div id="driverData">
+
+			<script>
+			
+			$.post( "/displayDriver" )
+			
+				.done(function( data ) {
+				
+				//console.log(data);
+				
+				$("#driverData").html(data);
+				
+			});     
+			
+			</script>
+
+		</div> <!-- /driverData -->
+		
+		
+		<div class="ui-grid-b" data-type="horizontal">
+			
+			<div class="ui-block-a"><button class='btn' id="updateDriverOrders"> Update orders list </button></div>
+					
+				<script>
+					
+					$( "#updateDriverOrders" ).click(function() {
+					
+						$.post( "/displayDriver" )
+						
+							.done(function( data ) {
+							
+							//console.log(data);
+							
+							$("#driverData").html(data);
+							
+						});   
+					});			
+					
+				</script>
+					
+			
+			<div class="ui-block-b"><button class='btn' id="markDelivered"> Mark as delivered </button></div>
+					
+				<script>
+				
+				$( "#markDelivered" ).click(function() {
+				
+					var orderId = "";
+					
+					$("input[type='radio'][name='delivered']").each(function(){
+					
+						if (this.checked == true){
+							orderId += this.value; 
+						}
+						
+						console.log(orderId);
+						
+						$.post( "/delivered", { id: orderId} )
+							.done(function(data) {
+									
+							$("#driverData").html(data);
+						});
+						
+					}); 
+					
+					alert("Order " + orderId + " has been marked as delivered");
+					
+				});
+				
+				</script>
+					
+			
+			<div class="ui-block-b"></div>
+			
+		</div> <!-- /class="ui-grid-b" data-type="horizontal" -->
+		
+		<script>
+		
+		$( "#weather" ).click(function() {
+		
+			$(this).text("Update");
+			$("#hideForecast").show();
+			$("#output").show();
+		
+			$.getJSON( "http://api.apixu.com/v1/current.json?key=41566e77049344ea89d212105190304&q=Dublin", function(data) {
+			
+				console.log(data);
+  
+				//console.log(data);
+				var location = data.location;
+			
+				var country = location.country;
+				var city = location.name;
+			
+				var forecast = data.current;
+						
+				var last_upd = forecast.last_updated;
+				var temp = forecast.temp_c;
+				var wind = forecast.wind_kph;
+				var humidity = forecast.humidity;
+				var cloud = forecast.cloud;
+				var vis = forecast.vis_km;
+			
+				var content = '';
+				var content2 = "";
+			
+				content = content + '<b>Location: </b>' + country + ', ' + city + "<br>";
+				
+				content2 = content2 + '<b>Last updated on: </b>' + last_upd + "<br>" + '<b>current temperature, C: </b>' + temp + "<br>" + '<b>wind, km/h: </b>' + wind + "<br>" + '<b>humidity, %: </b>' + humidity + "<br>" + '<b>cloud, %: </b>' + cloud + "<br>" + '<b>visibility, km: </b>' + vis + "<br>";
+     
+				$("#output").html(content).append(content2);
+			});
+		});
+		
+		$( "#hideForecast" ).click(function() {
+		
+			$("#output").hide();
+			$("#weather").text("Show weather");
+			$("#hideForecast").hide();
+		});
+		
+		</script>
+
+	</div><!-- /main content -->
+</div><!-- /driver page -->
+
+
+
+<div data-role="page" id="manager" data-theme="a">
+
+	<div data-role="header">
+		<h1>Manager</h1>
+	</div><!-- /header -->
+
+    <div role="main" class="ui-content">
+	
+		<div id=managerReport> </div>
+		
+		<div class="ui-grid-b" data-type="horizontal">
+			
+			<div class="ui-block-a"><button class='btn' id="report"> Update report </button></div>
+					
+				<script>
+					//updating the manager view at loading
+					$.post( "/total" )
+						.done(function( data ) {
+						
+						//console.log(data);
+						
+						$("#managerReport").html(data);
+						
+					}); 
+					//assigning on click action to a button
+					$( "#report" ).click(function() {
+						$.post( "/total " )
+							.done(function( data ) {
+							
+							//console.log(data);
+							
+							$("#managerReport").html(data);
+							
+						});   
+					});			
+					
+				</script>
+					
+			
+			<div class="ui-block-b"></div>
+				
+		</div> <!-- /class="ui-grid-b" data-type="horizontal" -->
+
+		
+		<div id=cancellOrder> 
+		
+			<script>
+			
+			$.post( "/displayManager" )
+				.done(function( data ) {
+				
+				//console.log(data);
+				
+				$("#cancellOrder").html(data);
+				
+			});     
+			
+			</script>
+		
+		</div>
+		
+		<div class="ui-grid-b" data-type="horizontal">
+		
+			<div class="ui-block-a"><button class='btn' id="updateManagerOrders"> Update orders </button></div>
+			
+			<script>
+					
+					
+				$( "#updateManagerOrders" ).click(function() {
+					$.post( "/displayManager" )
+						.done(function( data ) {
+							
+						//console.log(data);
+							
+						$("#cancellOrder").html(data);
+					
+					});   
+				});			
+					
+			</script>
+				
+			
+			<div class="ui-block-b"><button class='btn' id="deleteOrder"> Cancell order </button></div>
+					
+				<script>
+				
+				$( "#deleteOrder" ).click(function() {
+				
+					
+					
+					$("input[type='radio'][name='cancellOrderManager']").each(function(){
+					
+						var orderIdManager = "";
+					
+						if (this.checked == true){
+							orderIdManager = this.value; 
+						}
+						
+						console.log(orderIdManager);
+						
+						$.post( "/delete", { id: orderIdManager} )
+							.done(function(data) {
+									
+							$("#cancellOrder").html(data);
+						});
+						
+					}); 
+					
+					alert("Order has been deleted");
+					
+				});
+				
+				//alert("Order has been cancelled");
+				
+				</script>
+				
+		</div> <!-- /class="ui-grid-b" data-type="horizontal" -->
+	 
+	</div><!-- /content -->
+	
+</div><!-- /manager page -->
+
+
+
+<div data-role="page" id="customer" data-theme="a">
+	
+	<div data-role="header">
+			<h1>Customer page</h1>
+    </div><!-- /header -->
+	
+	
+	<div id="showOrderButtons" class="ui-grid-b">
+		
+		<div class="ui-block-a"><button class='btn' id="placeAnotherOrder"> Place another order </button></div>
+			
+		<div class="ui-block-b" ><button class='btn' id="hideCustomerOrders"> Hide my orders </button></div>
+			
+		<div class="ui-block-c" ><button class='btn' id="updateCustomerOrders"> Check my orders </button></div>
+				
+	</div>
+	
+	
+	<div id="customerData">
+	
+		<script>
+		
+		$( "#updateCustomerOrders" ).click(function() {
+			
+			$.post( "/displayCustomer" )
+				.done(function( data ) {
+				
+				console.log(data);
+				
+				$("#customerData").html(data);
+				
+			});     
+		});	
+		
+		$( "#hideCustomerOrders" ).click(function() {
+		
+			$( "#customerData" ).hide();
+		    
+		});	
+		
+		</script>
+	</div> <!-- /customerData -->
+
+    <div role="main" class="ui-content">
+		
+		
+		<div id="orderOptions">
+
+			<div class="ui-grid-b" id="totalData">
+				<div class="ui-block-a"><h2>Pizzas, Sides and drinks</h2></div>
+				<div class="ui-block-b" ><label style="text-align:right;"><b>Total order price, €:</b></label></div>
+				<div class="ui-block-c"><input type="text" id="totalOrderPrice" data-wrapper-class="controlgroup-textinput ui-btn" data-enhanced="true" style="width: 80px; text-align:right;" value="0"></div>
+			</div>
+
+
+			<div id="pruductsOptions">	
+						
+			</div><!-- /products options -->		
+     
+			<button id="placeOrder" data-theme="b">Place order </button>
+      
+			
+		</div><!-- /order options -->
+		
+		
+		
+		<div id="complete">
+    
+			<h3> Your order details:</h3>
+			
+				<div id="orderDetails">
+		
+				</div>
+		
+				<div id="address">
+		
+					<h3>Please enter delivery address:</h3>
+
+	    			<input type="text" name="deliveryAddress" id="deliveryAddress" value="" placeholder="Enter your delivery address"></input>
+	
+				</div>
+		
+		</div><!-- /complete -->
+		
+		<button id="goback">Go back to order  </button>
+		
+		<button id="completeOrder">Complete order </button>
+		
+		
+		
+	</div><!-- /content -->
+	
+
+</div> <!-- /data-role="page" id="customer" data-theme="a" --> 
+
 
 <script>
-
-		$( "#registerButton" ).click(function() {
-
-
-		  var un = $( "#username" ). val();
-		  console.log(un);
-		  
-		  
-		  var pw = $( "#pass" ). val();
-		  console.log(pw);
-		  
-		  
-		  var at = $( "#acctype" ). val();
-		  console.log(at);
-		  
-		  
-		  $.post( "/backend", { type: "register" , username:un, password:pw, acctype:at})
-			.done(function( data ) {
-			alert( "Data Loaded: " + data );
-			});
-		  
-		  
-		  
-		  //alert( "Register button clicked" );
-		  
+// template for a product
+	class product {
+	  constructor(name, price, qty) {
+		this.name = name;
+		this.price = price;
+		this.qty = qty;
+	  }
+	}
+	// define our products
+	product1 = new product("Hawaiian small", 5.00, 0);
+	product2 = new product("Hawaiian medium", 10.00, 0);
+	product3 = new product("Hawaiian large", 11.00, 0);
+	product4 = new product("New Yorker small", 5.00, 0);
+	product5 = new product("New Yorker medium", 10.00, 0);
+	product6 = new product("New Yorker large", 11.00, 0);
+	product7 = new product("House Special small", 5.00, 0);
+	product8 = new product("House Special medium", 10.00, 0);
+	product9 = new product("House Special large", 11.00, 0);
+	product10 = new product("Custom small", 5.00, 0);
+	product11 = new product("Custom medium", 10.00, 0);
+	product12 = new product("Custom large", 11.00, 0);
+	product13 = new product("Coca cola 330ml", 1.00, 0);
+	product14 = new product("Fanta 330ml", 1.00, 0);
+	product15 = new product("Sprite 330ml", 1.00, 0);
+	product16 = new product("Extra topping ham", 1.00, 0);
+	product17 = new product("Extra topping chicken", 1.00, 0);
+	product18 = new product("Extra topping pepperoni", 1.00, 0);
+	product19 = new product("Extra topping sweetcorn", 1.00, 0);
+	product20 = new product("Extra topping peppers", 1.00, 0);
+	product21 = new product("Extra topping tomato", 1.00, 0);
+	product22 = new product("Potato wedges", 5.00, 0);
+	product23 = new product("Garlic bread", 5.00, 0);
+	var products = [];
+	products.push(product1);
+	products.push(product2);
+	products.push(product3);
+	products.push(product4);
+	products.push(product5);
+	products.push(product6);
+	products.push(product7);
+	products.push(product8);
+	products.push(product9);
+	products.push(product10);
+	products.push(product11);
+	products.push(product12);
+	products.push(product13);
+	products.push(product14);
+	products.push(product15);
+	products.push(product16);
+	products.push(product17);
+	products.push(product18);
+	products.push(product19);
+	products.push(product20);
+	products.push(product21);
+	products.push(product22);
+	products.push(product23);
+	//console.log(products);
+	var totalOrderPrice = 0;
+	function makeProducts(){
+		var arrayLength = products.length;
+		
+		for (var i = 0; i < arrayLength; i++) { // loop over the products
+			var html = 
+			'<input type="text" id="product'+(i+1)+'" data-enhanced="true" value="'+ products[i].name +'" style="width: 200px;">'+
+			'<input type="button" id="addProduct'+(i+1)+'" data-inline="true" data-mini="true" data-theme="b" value="+" productname="'+ products[i].name + '" >'+
+														
+			'<input type="text" id="'+ i +'Qty" data-enhanced="true" value="0" style="width: 40px;">'+
+														
+			'<input type="button" id="removeProduct'+(i+1)+'" data-inline="true" data-mini="true" data-theme="b" value="-" productname="' + products[i].name + '" >'+
+			'total, €:'+
+												
+			'<input type="text" id="'+i+'Price" data-wrapper-class="controlgroup-textinput ui-btn" data-enhanced="true" style="width: 80px;"value="0">'+
+														
+			'<p>';
+			
+			$( "#pruductsOptions" ).append(html);
+			
+		}
+	}
+	makeProducts();
+	$('[id^=addProduct]' ).click(function() {
+			
+			var arrayLength = products.length;
+			var p = $(this).attr('productname'); // find out what was clicked
+			
+			for (var i = 0; i < arrayLength; i++) { // loop over the products
+			
+				var pro = products[i];
+				
+				if(p == pro.name) {
+					pro.qty = pro.qty + 1;
+					
+					//product1Qty
+					$( "#"+i+"Qty" ).val(pro.qty);
+					
+					$( "#"+i+"Price" ).val(pro.qty * pro.price);
+					
+					updateCart();
+				}
+			}
 		});
+	$('[id^=removeProduct]' ).click(function() {
+			
+			var arrayLength = products.length;
+			var p = $(this).attr('productname'); // find out what was clicked
+			
+			for (var i = 0; i < arrayLength; i++) { // loop over the products
+			
+				var pro = products[i];
+				
+				if(p == pro.name) {
+				
+					if (pro.qty > 0) {
+						pro.qty = pro.qty - 1;
+						
+						//product1Qty
+						$( "#"+i+"Qty" ).val(pro.qty);
+						
+						$( "#"+i+"Price" ).val(pro.qty * pro.price);
+						updateCart();  
+					}
+				}
+			}
+		});
+	// function to update the cart.
+	function updateCart(){
+		
+		var totalOrderPrice = 0;
+		var arrayLength = products.length;
+		for (var i = 0; i < arrayLength; i++) { // loop over the products
+			
+			totalOrderPrice += products[i].qty * products[i].price;
+					
+		}		
+		
+		$("#totalOrderPrice").val(totalOrderPrice);
+		
+	}
+</script>
 
 
-
-
-
+<script>
+	
+	$("#showOrderButtons").hide();
+	$("#placeAnotherOrder").hide(); // hide order details
+	$("#goback").hide(); // hide go back button
+	$("#completeOrder").hide(); // hide go complete order button
+	$("#complete").hide(); // hide go complete order button
+	$("#goback").click(function(){
+		  
+		 $("#showOrderButtons").hide();
+		 $("#pruductsOptions").show();
+		 $("#orderDetails").html(""); // wipe the older order display
+		 $("#placeOrder").show();
+		 $("#goback").hide(); // hide go back button
+		 $("#completeOrder").hide(); // hide go complete order button
+		 $("#complete").hide(); // hide go complete order button
+	});
+	$( "#placeOrder" ).click(function() {
+		$("#showOrderButtons").hide();
+		$("#placeOrder").hide();
+		$("#complete").show();
+		$("#pruductsOptions").hide(); // hide the order options
+		$("#orderDetails").show(); // show order details
+		$("#goback").show(); // show go back button
+		$("#completeOrder").show(); // hide go complete order button
+	
+	
+	
+	var content = '';// build up the content
+ 
+    content = content + '<b> Pizza type: </b><br><br>';
+	
+    
+    var pizza = $("input[name=pizza]").each(function() {
+        if(this.checked == true) { // filter only the ones that we selected.
+            content = content + this.value+'<br>';
+        }
+    });
+	
+	var arrayLength = products.length;
+	
+	for (var i = 0; i < arrayLength; i++) { // loop over the products
+		
+		var order = '';
+		
+		if (products[i].qty > 0) {
+		
+			order += '***' + products[i].name + '  @  ' +  products[i].qty + ' --- total, €  ' +  products[i].qty*products[i].price +'<br>';
+			
+			content = content + order + '<br>';
+			
+			//totalOrderPrice += products[i].qty * products[i].price;
+		}
+	}
+	
+	var totalOrderPrice = $("#totalOrderPrice").val();
+	
+	content = content + ' Total order price, €  :'+ totalOrderPrice + '<br>';
+	
+    
+    //var comments = $("#comments").val(); // get the comments
+    
+    //content = content + '<br><b>Additional order comments: </b><br>';
+	
+    //content = content + comments + '<br>';
+    
+    var username = '';
+    
+    $.post( "/backend", { type: "getusername"} )
+      .done(function( data ) {
+        
+		username = data; // whatever data comes back, store it in the username variable
+        //alert(data);
+        
+		content = content + "<p>Thank you for your order " + username +"!";
+    
+        // the updateing of the div, is INSIDE the .done function above, as we need to wait to get it back!
+        $("#orderDetails").html(content); 
+       
+		});
+	});
+	$( "#completeOrder" ).click(function() {
+	
+		$("#showOrderButtons").hide();
+		$("#productsOptions").hide(); // hide the order options
+		$("#orderDetails").show(); // show order details
+		$("#goback").show(); // show go back button
+		$("#completeOrder").show(); // hide go complete order button
+		var placedby = '';
+		
+		$.post( "/backend", { type: "getusername"} )
+		  .done(function( data ) {
+			
+			placedby = data; // whatever data comes back, store it in the username variable
+			
+			//console.log(placedby);
+			
+			
+			var serial = '';
+			
+			var status = 'pending';
+			var arrayLength = products.length;
+			
+			for (var i = 0; i < arrayLength; i++) { // loop over the products
+				
+				if (products[i].qty > 0) {
+				
+					serial += products[i].name + '-' +  products[i].qty + '; ';
+					
+					//orderPrice += products[i].qty * products[i].price;
+				}
+			}
+			console.log(serial);
+			
+			var orderPrice = 0;
+			for (var i = 0; i < arrayLength; i++) { // loop over the products
+				
+				orderPrice += products[i].qty * products[i].price;
+			
+			}	
+			
+			console.log(orderPrice);
+			
+			var address = $("#deliveryAddress").val();
+			console.log(address);
+			
+			
+			// jQuery post and send the ser.
+			$.post( "/catchTheCart", { placedby: placedby, address: address, ser: serial, orderPrice:orderPrice, status: status })
+			  .done(function( data ) {
+				
+				alert( "Your order has been placed, thank you!");
+				
+			});
+			
+			  $("#showOrderButtons").show();
+		
+		   
+		});
+		
+		
+	});
+  
 </script>
 
 
@@ -180,18 +823,98 @@
 
 
 
+<script>
+$( "#loginButton" ).click(function() {
+  
+      var un = $( "#login_username" ).val();
+      console.log(un);
+      
+      var pw = $( "#login_pass" ).val();
+      //console.log(pw);
+      
+    
+		$.post( "/backend", { type: "login", username:un, password:pw}).done(function( data ) {
+			//alert( "Data Loaded: " + data );
+        
+			if(data == 'customer'){
+				window.location="/index#customer";
+			}
+			else if(data == 'driver'){
+				window.location="/index#driver";
+			}
+			else if(data == 'manager'){
+				window.location="/index#manager";
+			}
+		});
+  
+	//alert( "login button pressed!" );
+  
+	});
+$( "#registerButton" ).click(function() {
+  
+		var un = $( "#register_username" ).val();
+		//console.log(un);
+      
+		var pw = $( "#register_pass" ).val();
+		//console.log(pw);
+      
+		// didn't copy this function from anywhere, just my logical conclusion
+		var accountType = "";
+		$("input[name=radio-choice-h-2]").each(function() {
+			if (this.checked == true){
+				accountType += this.value; 
+			}
+		});	 
+		console.log(accountType);  
+		
+		// validation
+		if(un == ""){
+			alert("please enter a username");
+		} 
+		else if (pw == ""){
+			alert("please enter a password");
+			
+		} else {
+		
+			
+      
+			$.post( "/backend", { type: "register", username:un, password:pw, acctype:accountType}).done(function( data ) {
+			
+				//console.log( data );
+				
+				if(data == 'exists'){
+				
+					alert('USERNAME EXISIT');
+				
+					window.location="/index#register";
+					
+					//$("#register_username").val('Username exists');
+					//$("#register_username").html('username exists');
+					
+					$("#register_username").css('color', 'red');
+					
+				} else {
+				
+				
+					if(accountType == 'customer'){
+						window.location="/index#customer";
+					}
+					else if(accountType == 'driver'){
+						window.location="/index#driver";
+					}
+					else if(accountType == 'manager'){
+						window.location="/index#manager";
+					}
+				
+				}
+			});
+		}
+   
+		//alert( "register button pressed!" );
+	});
+</script>
 
-
-
-
-
-
-
-
-
-
-
-
+</body>
 
 
 </html>

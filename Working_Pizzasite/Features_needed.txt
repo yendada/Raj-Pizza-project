@@ -1,3 +1,21 @@
+Working features:
+==================
+Register Working:
+Login Working:
+Manager can look at orders:
+Customer can order Pizzas
+Order working
+Driver can see orders and update status as Delivered.
+
+Issues Still but could not complete in time:
+===========================================
+Still could not get 'sessions' working.
+Dashboard not clean as anticipated.
+Error with DisplayDriver
+
+
+
+
 Index Page:
 - Username field
 - pwd field
@@ -27,6 +45,7 @@ Orders:
 - orderPrice(int)
 - status(string)
 - address(atring)datstring
+
 
 
 
